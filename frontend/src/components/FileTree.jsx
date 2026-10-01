@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { File, Folder, Search, Loader2, Code2, Clipboard, ChevronRight, ChevronDown } from 'lucide-react';
+import { apiUrl } from '../api';
 
 const TreeNode = ({ node, level = 0, onFileSelect, selectedFile, expandedFolders, toggleFolder }) => {
   const isFolder = node.type === 'folder';
@@ -135,7 +136,7 @@ export default function FileTree({ repo, structure, selectedFile, onFileSelect }
     setIsLoading(true);
     setFileContent('');
     
-    fetch(`http://localhost:8000/api/repositories/${repo.id}/files?path=${encodeURIComponent(selectedFile)}`)
+    fetch(apiUrl(`/api/repositories/${repo.id}/files?path=${encodeURIComponent(selectedFile)}`))
       .then(res => {
         if (!res.ok) throw new Error("Failed to load file content.");
         return res.json();

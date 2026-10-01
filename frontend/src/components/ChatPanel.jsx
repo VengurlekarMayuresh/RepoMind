@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Terminal as TermIcon, CheckCircle2, Circle, Loader2, Sparkles, AlertCircle } from 'lucide-react';
+import { apiUrl, websocketUrl } from '../api';
 
 export default function ChatPanel({ sessionId, messages, setMessages, activeRepo }) {
   const [input, setInput] = useState('');
@@ -36,7 +37,7 @@ export default function ChatPanel({ sessionId, messages, setMessages, activeRepo
     setIsStreaming(false);
 
     // Fetch historic logs
-    fetch(`http://localhost:8000/api/sessions/${sessionId}/logs`)
+    fetch(apiUrl(`/api/sessions/${sessionId}/logs`))
       .then((res) => res.json())
       .then((data) => {
         const formattedLogs = data.map(log => ({
@@ -56,9 +57,7 @@ export default function ChatPanel({ sessionId, messages, setMessages, activeRepo
       .catch(err => console.error("Error loading historic logs", err));
 
     // Establish WebSocket Connection
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//localhost:8000/api/sessions/${sessionId}/chat`;
-    const ws = new WebSocket(wsUrl);
+    const ws = new WebSocket(websocketUrl(`/api/sessions/${sessionId}/chat`));
 
     ws.onopen = () => {
       console.log("WebSocket connected successfully.");

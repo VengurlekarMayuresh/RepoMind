@@ -3,6 +3,7 @@ import mermaid from 'mermaid';
 import axios from 'axios';
 import { Compass, Loader2, Maximize, ZoomIn, ZoomOut } from 'lucide-react';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import { apiUrl } from '../api';
 
 mermaid.initialize({
   startOnLoad: true,
@@ -26,7 +27,7 @@ export default function ArchitectureMap({ repoId, onNodeClick }) {
       setError(null);
       setSvgStr('');
       try {
-        const response = await axios.get(`http://localhost:8000/api/repositories/${repoId}/architecture`);
+        const response = await axios.get(apiUrl(`/api/repositories/${repoId}/architecture`));
         setDiagram(response.data.mermaid);
       } catch (err) {
         console.error('Failed to fetch architecture diagram:', err);

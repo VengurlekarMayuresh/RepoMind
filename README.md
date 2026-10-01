@@ -199,6 +199,20 @@ npm run dev
 | `PORT` | ☑️ | Server port (default: `8000`) |
 | `ALLOWED_ORIGINS` | ☑️ | CORS origins (default: `http://localhost:5173`) |
 
+## Deploy to Render
+
+The repository includes [`render.yaml`](render.yaml) for two Render services:
+
+1. `repomind-api` — Dockerized FastAPI backend with `/health` health checks.
+2. `repomind-frontend` — Vite static site built from `frontend/`.
+
+Create a Blueprint from this repository in Render and enter the backend secrets when prompted. After the services are created, set these values:
+
+- Backend `ALLOWED_ORIGINS`: the full frontend URL, for example `https://repomind-frontend.onrender.com`.
+- Frontend `VITE_API_URL`: the full backend URL, for example `https://repomind-api.onrender.com`.
+
+`VITE_API_URL` is a build-time variable, so redeploy the frontend after changing it. The backend accepts Render's assigned `PORT` automatically, and WebSocket chat uses `wss://` when the frontend is served over HTTPS.
+
 ---
 
 ## License

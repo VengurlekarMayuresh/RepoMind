@@ -43,6 +43,7 @@ class Settings(BaseSettings):
     # ─── Server ───────────────────────────────────────────────────────────
     HOST: str = "0.0.0.0"
     PORT: int = 8000
+    ALLOWED_ORIGINS: str = "http://localhost:5173"
 
     model_config = SettingsConfigDict(
         env_file="../.env",

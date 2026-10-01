@@ -38,13 +38,20 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="RepoMind AI Backend", version="2.0.0")
 
+allowed_origins = [origin.strip() for origin in settings.ALLOWED_ORIGINS.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
 
 
 # ── Lifecycle ──────────────────────────────────────────────────────────────

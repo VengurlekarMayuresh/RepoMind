@@ -8,6 +8,7 @@ import FileTree from './components/FileTree';
 import GitHistory from './components/GitHistory';
 import { GitBranch, Star, Code, BarChart2, MessageSquare, Compass, ShieldAlert, Cpu, History } from 'lucide-react';
 import axios from 'axios';
+import { apiUrl } from './api';
 
 export default function App() {
   const [repos, setRepos] = useState([]);
@@ -23,7 +24,7 @@ export default function App() {
   // Fetch all repositories from backend
   const fetchRepos = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/repositories');
+      const response = await axios.get(apiUrl('/api/repositories'));
       setRepos(response.data);
     } catch (err) {
       console.error('Error fetching repositories:', err);
@@ -37,7 +38,7 @@ export default function App() {
   // Fetch sessions for a specific repo
   const fetchSessions = async (repoId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/sessions?repository_id=${repoId}`);
+      const response = await axios.get(apiUrl(`/api/sessions?repository_id=${repoId}`));
       setSessions(response.data);
       return response.data;
     } catch (err) {
@@ -49,7 +50,7 @@ export default function App() {
   // Load messages for a session
   const loadSessionMessages = async (sessionId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/sessions/${sessionId}/messages`);
+      const response = await axios.get(apiUrl(`/api/sessions/${sessionId}/messages`));
       const msgs = response.data.map(m => ({
         id: m.id,
         role: m.role,
@@ -93,7 +94,7 @@ export default function App() {
     if (!repo) return;
 
     try {
-      const res = await axios.post('http://localhost:8000/api/sessions', {
+      const res = await axios.post(apiUrl('/api/sessions'), {
         repository_id: repo.id
       });
       const session = res.data;
@@ -117,7 +118,7 @@ export default function App() {
   // Delete a session
   const handleDeleteSession = async (sessionId) => {
     try {
-      await axios.delete(`http://localhost:8000/api/sessions/${sessionId}`);
+      await axios.delete(apiUrl(`/api/sessions/${sessionId}`));
 
       // If we deleted the active session, switch to another or create new
       if (activeSession && activeSession.id === sessionId) {
@@ -155,7 +156,7 @@ export default function App() {
   const handleAddRepo = async (url) => {
     setIsLoadingRepos(true);
     try {
-      await axios.post('http://localhost:8000/api/repositories', { url });
+      await axios.post(apiUrl('/api/repositories'), { url });
       await fetchRepos();
     } catch (err) {
       console.error('Error registering repository:', err);

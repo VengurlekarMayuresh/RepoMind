@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { GitCommit, GitPullRequest, Loader2, Calendar, User } from 'lucide-react';
+import { apiUrl } from '../api';
 
 export default function GitHistory({ repoId }) {
   const [activeTab, setActiveTab] = useState('commits');
@@ -16,8 +17,8 @@ export default function GitHistory({ repoId }) {
       setError(null);
       try {
         const [commitsRes, prsRes] = await Promise.all([
-          axios.get(`http://localhost:8000/api/repositories/${repoId}/commits`),
-          axios.get(`http://localhost:8000/api/repositories/${repoId}/prs`)
+          axios.get(apiUrl(`/api/repositories/${repoId}/commits`)),
+          axios.get(apiUrl(`/api/repositories/${repoId}/prs`))
         ]);
         
         setData({
