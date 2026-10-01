@@ -10,7 +10,7 @@ import logging
 from typing import Set
 
 from app.db.mongo import get_collection
-from app.db.qdrant_client import get_qdrant_client, COLLECTION_KNOWLEDGE, COLLECTION_FILES
+from app.db.qdrant_client import get_qdrant_client, COLLECTION_MODULES, COLLECTION_FILES
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ async def _cleanup_qdrant(live_repo_ids: Set[str]):
     try:
         client = get_qdrant_client()
 
-        for collection_name in [COLLECTION_KNOWLEDGE, COLLECTION_FILES]:
+        for collection_name in [COLLECTION_MODULES, COLLECTION_FILES]:
             # Scroll through all points and collect orphan IDs
             orphan_ids = []
             offset = None

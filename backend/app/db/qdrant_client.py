@@ -186,13 +186,13 @@ async def upsert_module_vector(
     )
 
 
-async def delete_file_vectors(repository_id: str):
-    """Remove all file chunk vectors for a repository."""
+async def delete_file_vector(mongo_id: str):
+    """Remove all file chunks from Qdrant when the file is deleted from the repo."""
     client = get_qdrant_client()
     await client.delete(
         collection_name=COLLECTION_FILES,
         points_selector=Filter(
-            must=[FieldCondition(key="repository_id", match=MatchValue(value=repository_id))]
+            must=[FieldCondition(key="mongo_id", match=MatchValue(value=mongo_id))]
         ),
     )
 

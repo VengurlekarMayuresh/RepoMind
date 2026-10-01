@@ -215,14 +215,14 @@ async def get_repository_file(repo_id: str, path: str):
         gh = GitHubService()
         content = await gh.fetch_file_content(repo["owner"], repo["name"], path)
 
-        from app.db.qdrant_client import upsert_file_vector
+        from app.db.qdrant_client import upsert_file_chunks
         result = await files_col.insert_one({
             "repository_id": repo_id,
             "path": path,
             "content": content,
             "last_updated": datetime.utcnow(),
         })
-        await upsert_file_vector(str(result.inserted_id), repo_id, path, content[:500])
+        await upsert_file_chunks(str(result.inserted_id), repo_id, path, [content[:1500]])
         return {"path": path, "content": content}
     except Exception as e:
         raise HTTPException(
